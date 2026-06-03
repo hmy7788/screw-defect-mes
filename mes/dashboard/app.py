@@ -66,6 +66,11 @@ c1.metric("누적 생산", f"{stats['total']:,}")
 c2.metric("양품", f"{stats['good']:,}")
 c3.metric("불량", f"{stats['bad']:,}")
 c4.metric("불량률", f"{stats['defect_rate']:.1%}")
+st.caption(
+    "ℹ️ 불량률은 **FN-최소화 임계값**(Recall 0.99, 불량 미검출 방지) 기준이라 "
+    "정상 나사의 일부 오경보를 포함합니다. '불량을 놓치느니 정상을 재검사한다'는 의도된 설정으로, "
+    "버그가 아닌 정책 선택입니다(임계값↑로 오경보↓ 가능하나 검출력↓ 트레이드오프)."
+)
 
 # ---- 추이 차트 ----
 df = pd.DataFrame(hist)
