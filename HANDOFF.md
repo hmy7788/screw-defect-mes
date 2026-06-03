@@ -98,8 +98,15 @@ coreset 0.1을 0.01로 낮춰 320 비용을 낮추는 후속 실험. 결과 CSV:
     - good/bad 임계값 0.513(F2 최적): **Recall 0.992, FP 9/41**. 히트맵=이상도 비례 alpha 오버레이.
     - **유형(Type1~5) 자동분류는 제외 확정**: 위치 기반 분류가 데이터상 무작위 수준(≈20%, 유형별
       축위치 t 0.46~0.55로 완전 겹침)이라 불가. anomaly map은 위치는 잘 짚지만 hot point가 중앙 쏠림.
-  - ⬜ Phase 2 storage(SQLite) / 3 simulator(라인) / 4 dashboard(Streamlit: 불량률 추이+히트맵 갤러리) / 5 api(선택)
-  - 입력은 기존 데이터 스트리밍(라인 시뮬레이션). 대시보드=Streamlit 단일앱 채택.
+  - ✅ **Phase 2 storage**: `mes/storage/repository.py`(SQLite init/insert/recent/history/stats/reset).
+  - ✅ **Phase 3 simulator**: `mes/simulator/line_feeder.py`. test 이미지 1장씩 추론→DB기록.
+    양품 비율(good_ratio) 인자로 현실화(기본 0.85) — test셋은 결함 75%라 그대로면 불량률 비현실적.
+  - ✅ **Phase 4 dashboard**: `mes/dashboard/app.py`(Streamlit). KPI·불량률/이상점수 추이·불량
+    히트맵 갤러리·실시간 알람·자동 새로고침. **streamlit 설치됨**(1.58.0, conda env screw_defect).
+    실행: 터미널A `python -m mes.simulator.line_feeder inf 1.0 0.9` + 터미널B `streamlit run mes/dashboard/app.py`.
+  - ⬜ Phase 5 api(선택, FastAPI 분리).
+  - ⚠️ 화면 불량률이 ~25%로 보이는 건 모델 false-alarm(정상의 ~22%를 불량 판정, FN 최소화 임계값 0.513의 대가).
+    좋은 검출(Recall 0.992)의 반대급부. 임계값↑로 낮출 수 있으나 프로젝트 방침(FN 최소화)과 trade-off.
 
 ## 사용자 결정 사항(확정)
 

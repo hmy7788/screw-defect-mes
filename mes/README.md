@@ -25,39 +25,36 @@ test 이미지를  ──→  PatchCore로    ──→  판정 결과를  ─�
 | `dashboard/` | 관제 대시보드 (Streamlit) |
 | `runtime/` | 런타임 산출물(db 파일·히트맵 png) — gitignore |
 
-## 실행 순서 (구현 완료 후)
+## 실행 순서
 
 ```bash
-# 0) (최초 1회) 모델 준비 — 기존 학습 ckpt 재사용 or 새로 학습
-# 1) 추론 API 띄우기
-uvicorn mes.api.server:app --port 8000
-# 2) 대시보드 띄우기
-streamlit run mes/dashboard/app.py
-# 3) 라인 시뮬레이터 시작 (이미지 흘려보내기)
-python -m mes.simulator.line_feeder
+# 0) (최초 1회) 학습 ckpt -> 배포용 .pt
+python -m mes.core.export_model
+
+# 1) (터미널 A) 라인 시뮬레이터: test 이미지를 1초당 1장, 양품 90% 비율로 흘려보냄
+python -m mes.simulator.line_feeder inf 1.0 0.9
+
+# 2) (터미널 B) 관제 대시보드
+streamlit run mes/dashboard/app.py        # http://localhost:8501
 ```
 
 ## 진행 상황
 
-- ✅ **Phase 1 추론 코어 완료** (`core/export_model.py`, `core/inference.py`)
-  - ckpt(coreset 0.01/320) → 배포용 `.pt` export → `ScrewInferencer.predict_one(이미지)`
-    → `{verdict, score, heatmap_path}`
-  - good/bad 판정 임계값 0.513 (F2 최적, FN 최소화): **Recall 0.992, Precision 0.929 (FP 9/41)**
-  - 히트맵: 이상도 비례 alpha 오버레이로 결함 위치 부각, `runtime/heatmaps/<id>.png` 저장
-- ⬜ Phase 2 storage / 3 simulator / 4 dashboard / 5 api(선택)
+- ✅ **Phase 1 추론 코어** (`core/export_model.py`, `core/inference.py`)
+  - ckpt(coreset 0.01/320) → 배포용 `.pt` → `ScrewInferencer.predict_one` → `{verdict, score, heatmap_path}`
+  - 임계값 0.513 (F2 최적, FN 최소화): **Recall 0.992, Precision 0.929 (FP 9/41)**
+  - 히트맵: 이상도 비례 alpha 오버레이로 결함 위치 부각
+- ✅ **Phase 2 storage** (`storage/repository.py`): SQLite init/insert/recent/history/stats/reset
+- ✅ **Phase 3 simulator** (`simulator/line_feeder.py`): test 이미지 1장씩 추론·기록, 양품 비율 조정
+- ✅ **Phase 4 dashboard** (`dashboard/app.py`): KPI·불량률 추이·이상점수 추이·불량 히트맵 갤러리·실시간 알람·자동 새로고침
+- ⬜ Phase 5 api(선택): 추론을 FastAPI 서비스로 분리
 
 ## 결정 사항
 
-1. **유형(Type1~5) 자동분류 — 제외.** 데이터로 검증한 결과, PatchCore anomaly map은 위치는
-   잘 짚지만(pixel AUROC 0.98) 가장 뜨거운 점이 유형과 무관하게 중앙으로 쏠려, 위치 기반 유형
-   분류가 무작위 수준(≈20%, 유형별 축위치 t가 0.46~0.55로 완전 겹침)이라 불가. → good/bad + 위치
-   히트맵만 제공(히트맵이 결함 위치를 시각적으로 보여줌).
-2. **대시보드 형태** — Streamlit 단일앱(채택 예정, 가장 빠름).
+1. **유형(Type1~5) 자동분류 — 제외.** PatchCore anomaly map은 위치는 잘 짚지만(pixel AUROC 0.98)
+   가장 뜨거운 점이 유형과 무관하게 중앙으로 쏠려, 위치 기반 유형 분류가 무작위 수준(≈20%)이라 불가.
+   → good/bad + 위치 히트맵만 제공.
+2. **대시보드 형태** — Streamlit 단일앱.
 3. **모델 ckpt** — coreset 0.01 / 해상도 320 (빠른 추론 + 위치 AUPRO 0.956).
-
-## 실행 (Phase 1)
-
-```bash
-python -m mes.core.export_model   # 최초 1회: ckpt -> .pt
-python -m mes.core.inference      # 셀프테스트 (검출 집계 + 샘플 히트맵)
-```
+4. **유입 비율** — test셋은 결함 75%(평가용)라, 시뮬레이터에서 양품 비율(good_ratio)을 현실화(기본 85%).
+   단 모델 false-alarm(정상의 ~22%를 불량 판정, FN 최소화 임계값의 대가)으로 화면 불량률은 ~25%대로 보임.
