@@ -1,5 +1,7 @@
 # 데이터셋 (공개 데이터, 재현 가능 — 레포에 포함하지 않음)
 data/
+# EfficientAD 보조 데이터(imagenette ~1.5GB, 첫 실행 시 자동 다운로드)
+datasets/
 
 # 실험 산출물 (대용량 원본은 제외, 큐레이션된 results/ 는 추적)
 outputs/

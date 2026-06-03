@@ -85,7 +85,12 @@ coreset 0.1을 0.01로 낮춰 320 비용을 낮추는 후속 실험. 결과 CSV:
 - ✅ **해상도 스윕(256/320/512)**: 완료. 256/320 산출, 512는 OOM(8GB). 결과는 위 "해상도 스윕 결과" 참고.
   핵심: Type4 위치 0.971→0.984 개선(coreset 0.1).
 - ✅ **coreset 스윕(0.1 vs 0.01)**: 완료(위 표). 0.01로 320=9분, 손실 미미. 512 OOM은 해상도 한계로 확정.
-- ⬜ EfficientAD / PaDiM 비교
+- ✅ **EfficientAD / PaDiM 비교**: 완료. 결과 `results/model_compare/`, 스크립트 `run_model_comparison.py`.
+  3모델×256/320. 검출 image AUROC: **PatchCore 0.96 ≫ EfficientAD 0.85~0.93 > PaDiM 0.76**(PaDiM은
+  Recall 1.0이나 FP~40 오경보). 위치 AUPRO도 PatchCore 0.966 > EffAD 0.935 > PaDiM 0.908.
+  → **PatchCore가 검출·위치 양면 최선**(주력 모델 근거 확보). coreset은 PatchCore 전용이라 비교축은
+  해상도. EfficientAD는 학습형(batch=1 강제, Normalize 전처리 금지, imagenette 1.5GB 다운로드,
+  20 epoch 간이학습이라 다소 부족 — epoch↑ 시 개선 여지).
 - ⬜ **MES PoC** (다음 큰 단계):
   - 추론 서비스(이미지 → good/bad + 이상점수 + 결함위치 히트맵 + 유형)
   - 결과 DB + 관제 대시보드(생산현황·불량률 추이·유형분포·실시간 알람)
