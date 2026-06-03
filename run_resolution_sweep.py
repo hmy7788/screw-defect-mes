@@ -27,8 +27,14 @@ MEAN = [0.485, 0.456, 0.406]
 STD = [0.229, 0.224, 0.225]
 RES_LIST = [256, 320, 512]
 BATCH = {256: 8, 320: 4, 512: 2}
-OUT = "outputs/sweep"
+
+# coreset 비율: 명령줄 인자(예: `python run_resolution_sweep.py 0.01`)로 조정 가능.
+# 0.1=정확하지만 느림(320=70분/512=OOM), 0.01=수십배 빠름·정확도 유지 기대.
+CORESET = float(sys.argv[1]) if len(sys.argv) > 1 else 0.1
+# 출력 폴더를 coreset 값으로 태깅 → 0.1/0.01 결과가 서로 덮어쓰이지 않음.
+OUT = f"outputs/sweep_cs{str(CORESET).replace('.', '')}"
 os.makedirs(OUT, exist_ok=True)
+print(f"[설정] coreset_sampling_ratio={CORESET}  출력={OUT}")
 
 
 def make_pp(res):
@@ -55,7 +61,7 @@ for res in RES_LIST:
                                     num_workers=0, seed=42)
         dm.setup()
         model = Patchcore(backbone="wide_resnet50_2", layers=["layer2", "layer3"],
-                          coreset_sampling_ratio=0.1, pre_processor=make_pp(res))
+                          coreset_sampling_ratio=CORESET, pre_processor=make_pp(res))
         engine = Engine(default_root_dir=f"{OUT}/res{res}",
                         accelerator="gpu", devices=1, max_epochs=1)
 
