@@ -6,6 +6,12 @@ outputs/
 *.ckpt
 *.pth
 
+# MES 런타임 산출물 (db·히트맵은 재생성 가능 — 뼈대는 추적하되 산출물만 제외)
+mes/runtime/*
+!mes/runtime/.gitkeep
+*.sqlite
+*.db
+
 # Python
 __pycache__/
 *.pyc

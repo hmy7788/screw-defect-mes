@@ -1,0 +1,8 @@
+# MES PoC 추가 의존성 (연구 트랙 requirements.txt 와 별개)
+# 설치: pip install -r mes/requirements.txt
+fastapi
+uvicorn[standard]
+streamlit
+pillow
+pandas
+# torch / anomalib 은 연구 트랙(conda env screw_defect)에 이미 설치됨
