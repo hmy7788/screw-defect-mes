@@ -9,8 +9,8 @@
 
 ## 지금까지 완료된 것
 
-- ✅ 데이터: MVTec AD `screw` 원본(+ground_truth 마스크) 확보. `data/screw`는 원본
-  `..\screw_defect\data\screw`로의 **디렉터리 정션**(복제 아님).
+- ✅ 데이터: MVTec AD `screw` 원본(+ground_truth 마스크)을 **이 레포 `data/screw`에 실제 보유**
+  (옛 `screw_defect`에서 이동 완료, 정션 아님). `outputs/`도 이 레포로 이동됨. 둘 다 gitignore 대상.
 - ✅ 환경: conda env **`screw_defect`**(전역) / torch 2.5.1+cu121 / RTX 2070 SUPER / **anomalib 2.5.0**.
 - ✅ 파이프라인: PatchCore 스모크런 통과. 평가 레이어(`src/ad_eval.py`) 완성 — AUPRO·유형별 검출률·위치.
 - ✅ 새 Private 레포 생성·push: `github.com/hmy7788/screw-defect-mes`.
@@ -61,7 +61,7 @@ python run_resolution_sweep.py   # 해상도 256/320/512 비교 + 유형별 표
 - **현실 제약**: 320이 70분(coreset 병목), **512는 8GB에서 OOM**. coreset 0.1로 고해상도는 비현실적.
 - **다음**: coreset를 **0.01~0.02로 낮춰** 320/512 재실행(시간 수십배↓, 정확도 유지), 320 FN 원인(임계값) 분석.
 
-결과 CSV: 원본 `screw_defect/outputs/sweep/`(summary.csv, per_type_res256/320.csv).
+결과 CSV: 이 레포 `outputs/sweep/`(전체) + `results/sweep/`(커밋된 큐레이션본: CSV·Type4 히트맵).
 
 ## 진행 중 / 미완
 
