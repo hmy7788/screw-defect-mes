@@ -91,11 +91,15 @@ coreset 0.1을 0.01로 낮춰 320 비용을 낮추는 후속 실험. 결과 CSV:
   → **PatchCore가 검출·위치 양면 최선**(주력 모델 근거 확보). coreset은 PatchCore 전용이라 비교축은
   해상도. EfficientAD는 학습형(batch=1 강제, Normalize 전처리 금지, imagenette 1.5GB 다운로드,
   20 epoch 간이학습이라 다소 부족 — epoch↑ 시 개선 여지).
-- ⬜ **MES PoC** (다음 큰 단계):
-  - 추론 서비스(이미지 → good/bad + 이상점수 + 결함위치 히트맵 + 유형)
-  - 결과 DB + 관제 대시보드(생산현황·불량률 추이·유형분포·실시간 알람)
-  - 입력은 **기존 데이터 스트리밍(라인 시뮬레이션)** 으로 결정됨
-  - **MES 범위는 아직 미확정** (자체 MES-lite PoC 방향으로 열어둠) — 사용자와 확정 필요
+- 🔶 **MES PoC** (진행 중, `mes/`):
+  - ✅ **Phase 1 추론 코어 완료**: `mes/core/export_model.py`(ckpt→배포용 .pt) +
+    `mes/core/inference.py`(`ScrewInferencer.predict_one` → good/bad·이상점수·히트맵).
+    - 모델 = coreset 0.01/320 ckpt를 `ExportType.TORCH`로 export(전처리·후처리 내장). `TorchInferencer` 사용.
+    - good/bad 임계값 0.513(F2 최적): **Recall 0.992, FP 9/41**. 히트맵=이상도 비례 alpha 오버레이.
+    - **유형(Type1~5) 자동분류는 제외 확정**: 위치 기반 분류가 데이터상 무작위 수준(≈20%, 유형별
+      축위치 t 0.46~0.55로 완전 겹침)이라 불가. anomaly map은 위치는 잘 짚지만 hot point가 중앙 쏠림.
+  - ⬜ Phase 2 storage(SQLite) / 3 simulator(라인) / 4 dashboard(Streamlit: 불량률 추이+히트맵 갤러리) / 5 api(선택)
+  - 입력은 기존 데이터 스트리밍(라인 시뮬레이션). 대시보드=Streamlit 단일앱 채택.
 
 ## 사용자 결정 사항(확정)
 

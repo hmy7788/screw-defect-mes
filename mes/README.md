@@ -37,10 +37,27 @@ streamlit run mes/dashboard/app.py
 python -m mes.simulator.line_feeder
 ```
 
-## 미확정 결정사항 (구현 전 확정 필요)
+## 진행 상황
 
-1. **유형(Type1~5) 표시** — 모델은 good/bad·위치는 주지만 유형 분류는 직접 안 함.
-   ㉠ 히트맵 위치 기반 간단 규칙 분류 추가 / ㉡ 유형 없이 good/bad+위치만.
-2. **대시보드 형태** — Streamlit 단일앱(채택 예정, 가장 빠름) vs FastAPI+웹.
+- ✅ **Phase 1 추론 코어 완료** (`core/export_model.py`, `core/inference.py`)
+  - ckpt(coreset 0.01/320) → 배포용 `.pt` export → `ScrewInferencer.predict_one(이미지)`
+    → `{verdict, score, heatmap_path}`
+  - good/bad 판정 임계값 0.513 (F2 최적, FN 최소화): **Recall 0.992, Precision 0.929 (FP 9/41)**
+  - 히트맵: 이상도 비례 alpha 오버레이로 결함 위치 부각, `runtime/heatmaps/<id>.png` 저장
+- ⬜ Phase 2 storage / 3 simulator / 4 dashboard / 5 api(선택)
 
-> 현재는 **뼈대만** 존재. 각 파일의 TODO를 단계별로 채운다.
+## 결정 사항
+
+1. **유형(Type1~5) 자동분류 — 제외.** 데이터로 검증한 결과, PatchCore anomaly map은 위치는
+   잘 짚지만(pixel AUROC 0.98) 가장 뜨거운 점이 유형과 무관하게 중앙으로 쏠려, 위치 기반 유형
+   분류가 무작위 수준(≈20%, 유형별 축위치 t가 0.46~0.55로 완전 겹침)이라 불가. → good/bad + 위치
+   히트맵만 제공(히트맵이 결함 위치를 시각적으로 보여줌).
+2. **대시보드 형태** — Streamlit 단일앱(채택 예정, 가장 빠름).
+3. **모델 ckpt** — coreset 0.01 / 해상도 320 (빠른 추론 + 위치 AUPRO 0.956).
+
+## 실행 (Phase 1)
+
+```bash
+python -m mes.core.export_model   # 최초 1회: ckpt -> .pt
+python -m mes.core.inference      # 셀프테스트 (검출 집계 + 샘플 히트맵)
+```
