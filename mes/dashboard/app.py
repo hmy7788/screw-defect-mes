@@ -45,7 +45,8 @@ bad_recent = repository.recent(limit=8, only_bad=True)
 st.title("나사 결함 검사 — 실시간 관제")
 st.caption(f"갱신 {time.strftime('%Y-%m-%d %H:%M:%S')}  ·  입력원 = data/screw/test (라인 시뮬레이션)")
 
-if stats["total"] == 0:
+if stats["total"] == 0 or not hist:
+    # DB가 비었거나, 조회 직후 시뮬레이터가 reset한 경합 상황 모두 안전 처리
     st.info("아직 검사 데이터가 없습니다. 다른 터미널에서 시뮬레이터를 실행하세요:\n\n"
             "`python -m mes.simulator.line_feeder inf 1.0 0.9`")
     if auto:
@@ -106,8 +107,11 @@ else:
 # ---- 최근 검사 목록 ----
 with st.expander("최근 검사 목록(20)"):
     recent = repository.recent(limit=20)
-    rdf = pd.DataFrame(recent)[["ts", "image_id", "verdict", "score"]]
-    st.dataframe(rdf, use_container_width=True, hide_index=True)
+    if recent:
+        rdf = pd.DataFrame(recent)[["ts", "image_id", "verdict", "score"]]
+        st.dataframe(rdf, use_container_width=True, hide_index=True)
+    else:
+        st.write("표시할 검사가 없습니다.")
 
 # ---- 자동 새로고침 ----
 if auto:
