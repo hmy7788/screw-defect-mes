@@ -1,6 +1,6 @@
 # 해상도 스윕 결과 (PatchCore, coreset 0.01) — 속도·정확도 트레이드오프
 
-MVTec `screw`, good-only 학습. coreset 0.1 결과([../sweep/RESULTS.md](../sweep/RESULTS.md))의
+MVTec `screw`, good-only 학습. coreset 0.1 결과([../sweep_cs01/RESULTS.md](../sweep_cs01/RESULTS.md))의
 **후속 실험**: coreset를 0.1→0.01로 낮춰 고해상도(320) 실행 비용을 낮추고, 정확도 손실을 정량 비교.
 512는 coreset와 무관하게 8GB GPU 추론 메모리 한계로 여전히 OOM.
 

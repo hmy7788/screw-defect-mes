@@ -61,7 +61,7 @@ python run_resolution_sweep.py   # 해상도 256/320/512 비교 + 유형별 표
 - **현실 제약**: 320이 70분(coreset 병목), **512는 8GB에서 OOM**. coreset 0.1로 고해상도는 비현실적.
 - **다음**: coreset를 **0.01~0.02로 낮춰** 320/512 재실행(시간 수십배↓, 정확도 유지), 320 FN 원인(임계값) 분석.
 
-결과 CSV: 이 레포 `outputs/sweep/`(전체) + `results/sweep/`(커밋된 큐레이션본: CSV·Type4 히트맵).
+결과 CSV: 이 레포 `outputs/sweep_cs01/`(전체) + `results/sweep_cs01/`(커밋된 큐레이션본: CSV·Type4 히트맵).
 
 ## coreset 스윕 (0.1 vs 0.01) — 완료
 
