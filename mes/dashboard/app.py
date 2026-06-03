@@ -9,8 +9,13 @@ storage(SQLite)를 주기적으로 읽어 실시간 생산현황을 보여준다
 """
 import os
 os.environ.setdefault("KMP_DUPLICATE_LIB_OK", "TRUE")
+import sys
 import time
 from pathlib import Path
+
+# `streamlit run mes/dashboard/app.py` 는 스크립트 폴더만 sys.path에 넣어 `import mes`가 실패한다.
+# 레포 루트(이 파일 기준 3단계 위)를 경로에 추가해 어떤 실행 방식이든 동작하게 한다.
+sys.path.insert(0, str(Path(__file__).resolve().parents[2]))
 
 import pandas as pd
 import streamlit as st
