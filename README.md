@@ -15,6 +15,12 @@
 - 결함 119장 **전부를 평가에 사용**
 - ground-truth 마스크로 **결함 위치를 정량 평가**(Pixel AUROC / AUPRO)
 
+![결함 위치 히트맵 — 정상 + 유형별](results/figures/heatmap_readme.png)
+
+> 정상(good)은 차분하고, 결함은 그 위치만 뜨겁게 반응한다(괄호=이상점수, 임계값 0.513).
+> good/결함을 **공통 색 스케일**로 칠하고 배경을 억제해 대조를 정직하게 표현했으며, 각 유형의
+> 표본은 **GT 마스크와의 농도비**로 자동 선별했다. 생성: `python build_heatmap_grid.py`.
+
 ## 데이터셋
 
 [MVTec AD](https://www.mvtec.com/company/research/datasets/mvtec-ad) 의 `screw` 카테고리
