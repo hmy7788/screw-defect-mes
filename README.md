@@ -116,12 +116,28 @@ streamlit run mes/dashboard/app.py                    # B: 대시보드 → loca
   무관하게 중앙으로 쏠려, 위치 기반 분류가 데이터상 무작위 수준(≈20%)임을 확인 → good/bad + 위치 히트맵만 제공.
 - 모델 = coreset 0.01/320(빠른 추론). 상세: [mes/README.md](mes/README.md).
 
+## C# 산업형 MES (`csharp/`)
+
+같은 PatchCore 모델을 **현업 제조 IT 형태**로 운용하는 .NET 데스크톱 MES.
+외부 Python 없이 **ONNX Runtime으로 .NET에서 직접 추론**한다(순수 .NET).
+
+```
+ScrewMes.Core → Inference(ONNX) → Data(EF Core/SQL Server) → Simulator → App(WPF)
+WPF 3탭: 생산현황(실시간 KPI·추세·히트맵) · 작업지시/Lot 추적성 · 품질분석(Pareto)
+```
+
+- **ONNX 네이티브 파리티**: anomalib ONNX export는 전·후처리를 그래프에 내장 → C#은 원본 RGB/255만
+  넣으면 `pred_score`가 나온다. test 36장에서 **C# 점수 == Python**(최대 |Δ| 0.00010, 판정 36/36).
+- **현업 스택**: WPF(MVVM) + **SQL Server(LocalDB) · EF Core 코드퍼스트** + 작업지시(WO)/Lot **추적성**.
+- 결함 유형(Pareto)은 모델 산출이 아니라 라인 소스의 GT 주입(정직 표기). 빌드·실행: [csharp/README.md](csharp/README.md).
+
 ## 로드맵
 
 - [x] 이상탐지 파이프라인 (PatchCore + 마스크 평가) · 평가 레이어 (AUPRO·유형별)
 - [x] 해상도/coreset 스윕, EfficientAD/PaDiM 비교
 - [x] 추론 서비스화 (이미지 → good/bad + 이상점수 + 위치 히트맵)
 - [x] **MES-lite PoC**: 결과 DB + 관제 대시보드(생산현황·불량률 추이·히트맵 갤러리·실시간 알람) + 라인 시뮬레이션
+- [x] **C# 산업형 MES**(`csharp/`): WPF + ONNX 네이티브 추론 + SQL Server/EF Core + 작업지시·Lot 추적성·Pareto
 - [ ] (선택) FastAPI 추론 서비스 분리
 
 자세한 설계는 [PLAN.md](PLAN.md), MES 상세는 [mes/README.md](mes/README.md) 참고.

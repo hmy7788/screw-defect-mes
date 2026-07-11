@@ -26,3 +26,12 @@ venv/
 .idea/
 .vscode/
 .claude/
+
+# C# MES (ScrewMes) — 빌드 산출물 / 런타임 / 모델 바이너리는 제외(소스만 추적)
+csharp/**/bin/
+csharp/**/obj/
+csharp/runtime/
+csharp/model/weights/
+csharp/model/*.onnx
+# meta.json·parity_samples.json 은 작아서 추적(C# 추론 재현·검증용)
+*.onnx
