@@ -1,0 +1,251 @@
+<Window x:Class="ScrewMes.App.MainWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:lvc="clr-namespace:LiveChartsCore.SkiaSharpView.WPF;assembly=LiveChartsCore.SkiaSharpView.WPF"
+        Title="나사 결함 검사 MES — PatchCore 비전검사 연계"
+        Height="880" Width="1320" FontFamily="Segoe UI, Malgun Gothic" FontSize="13"
+        Background="#F4F5F7">
+    <Window.Resources>
+        <Style x:Key="Card" TargetType="Border">
+            <Setter Property="Background" Value="White"/>
+            <Setter Property="CornerRadius" Value="8"/>
+            <Setter Property="Padding" Value="14"/>
+            <Setter Property="Margin" Value="6"/>
+            <Setter Property="BorderBrush" Value="#E0E0E0"/>
+            <Setter Property="BorderThickness" Value="1"/>
+        </Style>
+        <Style x:Key="Kpi" TargetType="TextBlock">
+            <Setter Property="FontSize" Value="30"/>
+            <Setter Property="FontWeight" Value="Bold"/>
+        </Style>
+        <Style x:Key="KpiLabel" TargetType="TextBlock">
+            <Setter Property="Foreground" Value="#666"/>
+            <Setter Property="FontSize" Value="12"/>
+        </Style>
+        <Style TargetType="DataGrid">
+            <Setter Property="AutoGenerateColumns" Value="False"/>
+            <Setter Property="IsReadOnly" Value="True"/>
+            <Setter Property="HeadersVisibility" Value="Column"/>
+            <Setter Property="GridLinesVisibility" Value="Horizontal"/>
+            <Setter Property="RowHeaderWidth" Value="0"/>
+            <Setter Property="Background" Value="White"/>
+        </Style>
+    </Window.Resources>
+
+    <Grid Margin="8">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="*"/>
+        </Grid.RowDefinitions>
+
+        <!-- 상단 라인 제어 바 -->
+        <Border Grid.Row="0" Style="{StaticResource Card}">
+            <Grid>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="Auto"/>
+                    <ColumnDefinition Width="*"/>
+                    <ColumnDefinition Width="Auto"/>
+                </Grid.ColumnDefinitions>
+                <StackPanel Orientation="Horizontal" VerticalAlignment="Center">
+                    <TextBlock Text="🏭 라인" FontWeight="Bold" FontSize="16" VerticalAlignment="Center" Margin="0,0,16,0"/>
+                    <TextBlock Text="품목" VerticalAlignment="Center" Margin="0,0,4,0"/>
+                    <TextBox Text="{Binding NewProduct}" Width="120" Margin="0,0,12,0" VerticalContentAlignment="Center"/>
+                    <TextBlock Text="계획수량" VerticalAlignment="Center" Margin="0,0,4,0"/>
+                    <TextBox Text="{Binding NewQty}" Width="70" Margin="0,0,12,0" VerticalContentAlignment="Center"/>
+                    <TextBlock Text="양품비율" VerticalAlignment="Center" Margin="0,0,4,0"/>
+                    <Slider Value="{Binding GoodRatio}" Minimum="0.5" Maximum="1.0" Width="110" VerticalAlignment="Center"/>
+                    <TextBlock Text="{Binding GoodRatio, StringFormat={}{0:P0}}" Width="40" VerticalAlignment="Center"/>
+                    <TextBlock Text="간격(s)" VerticalAlignment="Center" Margin="8,0,4,0"/>
+                    <Slider Value="{Binding FeedInterval}" Minimum="0.2" Maximum="2.0" Width="90" VerticalAlignment="Center"/>
+                    <TextBlock Text="{Binding FeedInterval, StringFormat={}{0:0.0}}" Width="32" VerticalAlignment="Center"/>
+                </StackPanel>
+                <StackPanel Grid.Column="2" Orientation="Horizontal" VerticalAlignment="Center">
+                    <TextBlock Text="{Binding StatusText}" VerticalAlignment="Center" Margin="0,0,12,0" Foreground="#444"/>
+                    <Button Content="▶ 가동" Command="{Binding StartLineCommand}" Padding="14,6" Margin="3,0"
+                            Background="#2E7D32" Foreground="White" BorderThickness="0"/>
+                    <Button Content="■ 정지" Command="{Binding StopLineCommand}" Padding="14,6" Margin="3,0"
+                            Background="#C62828" Foreground="White" BorderThickness="0"/>
+                    <Button Content="↺ 초기화" Command="{Binding ResetDbCommand}" Padding="14,6" Margin="3,0"/>
+                </StackPanel>
+            </Grid>
+        </Border>
+
+        <TabControl Grid.Row="1" Margin="6" Background="Transparent" BorderThickness="0">
+
+            <!-- ① 생산현황 -->
+            <TabItem Header="생산현황">
+                <Grid Margin="4">
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="Auto"/>
+                        <RowDefinition Height="Auto"/>
+                        <RowDefinition Height="*"/>
+                        <RowDefinition Height="Auto"/>
+                    </Grid.RowDefinitions>
+
+                    <!-- 최신 알람 배너 -->
+                    <Border Grid.Row="0" Style="{StaticResource Card}"
+                            Background="{Binding LatestIsBad, Converter={StaticResource BadToBanner}}">
+                        <TextBlock Text="{Binding LatestAlarmText}" FontSize="15" FontWeight="SemiBold"/>
+                    </Border>
+
+                    <!-- KPI 카드 -->
+                    <Grid Grid.Row="1">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="*"/><ColumnDefinition Width="*"/>
+                            <ColumnDefinition Width="*"/><ColumnDefinition Width="*"/>
+                        </Grid.ColumnDefinitions>
+                        <Border Grid.Column="0" Style="{StaticResource Card}">
+                            <StackPanel><TextBlock Text="누적 생산" Style="{StaticResource KpiLabel}"/>
+                                <TextBlock Text="{Binding Total}" Style="{StaticResource Kpi}"/></StackPanel>
+                        </Border>
+                        <Border Grid.Column="1" Style="{StaticResource Card}">
+                            <StackPanel><TextBlock Text="양품" Style="{StaticResource KpiLabel}"/>
+                                <TextBlock Text="{Binding GoodCount}" Style="{StaticResource Kpi}" Foreground="#2E7D32"/></StackPanel>
+                        </Border>
+                        <Border Grid.Column="2" Style="{StaticResource Card}">
+                            <StackPanel><TextBlock Text="불량" Style="{StaticResource KpiLabel}"/>
+                                <TextBlock Text="{Binding BadCount}" Style="{StaticResource Kpi}" Foreground="#C62828"/></StackPanel>
+                        </Border>
+                        <Border Grid.Column="3" Style="{StaticResource Card}">
+                            <StackPanel><TextBlock Text="불량률" Style="{StaticResource KpiLabel}"/>
+                                <TextBlock Text="{Binding DefectRateText}" Style="{StaticResource Kpi}"/></StackPanel>
+                        </Border>
+                    </Grid>
+
+                    <!-- 차트 2개 -->
+                    <Grid Grid.Row="2">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="*"/><ColumnDefinition Width="*"/>
+                        </Grid.ColumnDefinitions>
+                        <Border Grid.Column="0" Style="{StaticResource Card}">
+                            <DockPanel>
+                                <TextBlock DockPanel.Dock="Top" Text="이상점수 추세 (임계값 0.513)" FontWeight="SemiBold" Margin="0,0,0,6"/>
+                                <lvc:CartesianChart Series="{Binding ScoreSeries}"/>
+                            </DockPanel>
+                        </Border>
+                        <Border Grid.Column="1" Style="{StaticResource Card}">
+                            <DockPanel>
+                                <TextBlock DockPanel.Dock="Top" Text="불량률 추세 (누적 / 이동평균)" FontWeight="SemiBold" Margin="0,0,0,6"/>
+                                <lvc:CartesianChart Series="{Binding DefectRateSeries}"/>
+                            </DockPanel>
+                        </Border>
+                    </Grid>
+
+                    <!-- 최근 불량 히트맵 갤러리 -->
+                    <Border Grid.Row="3" Style="{StaticResource Card}">
+                        <DockPanel>
+                            <TextBlock DockPanel.Dock="Top" Text="최근 불량 — 결함 위치 히트맵" FontWeight="SemiBold" Margin="0,0,0,6"/>
+                            <ItemsControl ItemsSource="{Binding RecentBad}" Height="150">
+                                <ItemsControl.ItemsPanel>
+                                    <ItemsPanelTemplate><StackPanel Orientation="Horizontal"/></ItemsPanelTemplate>
+                                </ItemsControl.ItemsPanel>
+                                <ItemsControl.ItemTemplate>
+                                    <DataTemplate>
+                                        <StackPanel Margin="4">
+                                            <Image Source="{Binding HeatmapPath, Converter={StaticResource PathToImage}}"
+                                                   Width="120" Height="120" Stretch="Uniform"/>
+                                            <TextBlock Text="{Binding Caption}" FontSize="11" HorizontalAlignment="Center"/>
+                                        </StackPanel>
+                                    </DataTemplate>
+                                </ItemsControl.ItemTemplate>
+                            </ItemsControl>
+                        </DockPanel>
+                    </Border>
+                </Grid>
+            </TabItem>
+
+            <!-- ② 작업지시 / 추적성 -->
+            <TabItem Header="작업지시 · 추적성">
+                <Grid Margin="4">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="1.1*"/>
+                        <ColumnDefinition Width="1*"/>
+                        <ColumnDefinition Width="1.6*"/>
+                    </Grid.ColumnDefinitions>
+
+                    <Border Grid.Column="0" Style="{StaticResource Card}">
+                        <DockPanel>
+                            <StackPanel DockPanel.Dock="Top" Orientation="Horizontal" Margin="0,0,0,6">
+                                <TextBlock Text="작업지시 (Work Order)" FontWeight="SemiBold" VerticalAlignment="Center"/>
+                                <Button Content="+ 생성" Command="{Binding CreateWorkOrderCommand}" Margin="10,0,0,0" Padding="8,2"/>
+                            </StackPanel>
+                            <DataGrid ItemsSource="{Binding WorkOrders}" SelectedItem="{Binding SelectedWorkOrder}">
+                                <DataGrid.Columns>
+                                    <DataGridTextColumn Header="WO 번호" Binding="{Binding Code}" Width="*"/>
+                                    <DataGridTextColumn Header="품목" Binding="{Binding Product}" Width="Auto"/>
+                                    <DataGridTextColumn Header="상태" Binding="{Binding Status}" Width="Auto"/>
+                                </DataGrid.Columns>
+                            </DataGrid>
+                        </DockPanel>
+                    </Border>
+
+                    <Border Grid.Column="1" Style="{StaticResource Card}">
+                        <DockPanel>
+                            <TextBlock DockPanel.Dock="Top" Text="Lot (선택 WO 하위)" FontWeight="SemiBold" Margin="0,0,0,6"/>
+                            <DataGrid ItemsSource="{Binding Lots}" SelectedItem="{Binding SelectedLot}">
+                                <DataGrid.Columns>
+                                    <DataGridTextColumn Header="Lot 번호" Binding="{Binding LotNo}" Width="*"/>
+                                    <DataGridTextColumn Header="상태" Binding="{Binding Status}" Width="Auto"/>
+                                </DataGrid.Columns>
+                            </DataGrid>
+                        </DockPanel>
+                    </Border>
+
+                    <Border Grid.Column="2" Style="{StaticResource Card}">
+                        <Grid>
+                            <Grid.RowDefinitions>
+                                <RowDefinition Height="Auto"/>
+                                <RowDefinition Height="*"/>
+                                <RowDefinition Height="Auto"/>
+                            </Grid.RowDefinitions>
+                            <TextBlock Grid.Row="0" Text="검사 이력 (선택 Lot 하위) — 추적성 드릴다운" FontWeight="SemiBold" Margin="0,0,0,6"/>
+                            <DataGrid Grid.Row="1" ItemsSource="{Binding LotInspections}" SelectedItem="{Binding SelectedTrace}">
+                                <DataGrid.Columns>
+                                    <DataGridTextColumn Header="시각" Binding="{Binding Time}" Width="Auto"/>
+                                    <DataGridTextColumn Header="이미지" Binding="{Binding ImageId}" Width="*"/>
+                                    <DataGridTextColumn Header="판정" Binding="{Binding Verdict}" Width="Auto"/>
+                                    <DataGridTextColumn Header="점수" Binding="{Binding Score, StringFormat=F3}" Width="Auto"/>
+                                    <DataGridTextColumn Header="유형(GT)" Binding="{Binding Type}" Width="Auto"/>
+                                </DataGrid.Columns>
+                            </DataGrid>
+                            <StackPanel Grid.Row="2" Orientation="Horizontal" Margin="0,8,0,0">
+                                <Image Source="{Binding SelectedTrace.HeatmapPath, Converter={StaticResource PathToImage}}"
+                                       Width="160" Height="160" Stretch="Uniform"/>
+                                <TextBlock Text="◀ 선택 검사의 결함 위치 히트맵" VerticalAlignment="Center" Margin="10,0,0,0" Foreground="#666"/>
+                            </StackPanel>
+                        </Grid>
+                    </Border>
+                </Grid>
+            </TabItem>
+
+            <!-- ③ 품질분석 -->
+            <TabItem Header="품질분석">
+                <Grid Margin="4">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="1.6*"/>
+                        <ColumnDefinition Width="1*"/>
+                    </Grid.ColumnDefinitions>
+                    <Border Grid.Column="0" Style="{StaticResource Card}">
+                        <DockPanel>
+                            <TextBlock DockPanel.Dock="Top" Text="불량 유형 Pareto (건수 + 누적%)" FontWeight="SemiBold" Margin="0,0,0,6"/>
+                            <lvc:CartesianChart Series="{Binding ParetoSeries}"
+                                                XAxes="{Binding ParetoXAxes}" YAxes="{Binding ParetoYAxes}"/>
+                        </DockPanel>
+                    </Border>
+                    <Border Grid.Column="1" Style="{StaticResource Card}">
+                        <DockPanel>
+                            <TextBlock DockPanel.Dock="Top" Text="유형별 집계" FontWeight="SemiBold" Margin="0,0,0,6"/>
+                            <DataGrid ItemsSource="{Binding ParetoRows}">
+                                <DataGrid.Columns>
+                                    <DataGridTextColumn Header="유형" Binding="{Binding Label}" Width="*"/>
+                                    <DataGridTextColumn Header="건수" Binding="{Binding Count}" Width="Auto"/>
+                                    <DataGridTextColumn Header="누적%" Binding="{Binding CumulativePercent, StringFormat=F1}" Width="Auto"/>
+                                </DataGrid.Columns>
+                            </DataGrid>
+                        </DockPanel>
+                    </Border>
+                </Grid>
+            </TabItem>
+        </TabControl>
+    </Grid>
+</Window>

@@ -1,0 +1,52 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 17
+VisualStudioVersion = 17.0.31903.59
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ScrewMes.Core", "ScrewMes.Core\ScrewMes.Core.csproj", "{2D3EA778-767D-4E67-B7EC-A7699CC9907B}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ScrewMes.Data", "ScrewMes.Data\ScrewMes.Data.csproj", "{6B5C3584-455A-4121-9B5D-0B2D2115F0EC}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ScrewMes.Inference", "ScrewMes.Inference\ScrewMes.Inference.csproj", "{B61DB5CD-5DBB-41B6-B871-B809F34BE9BC}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ScrewMes.ParityCheck", "ScrewMes.ParityCheck\ScrewMes.ParityCheck.csproj", "{D909DD0C-F5CB-4F61-A645-86B529E5C1B2}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ScrewMes.Simulator", "ScrewMes.Simulator\ScrewMes.Simulator.csproj", "{A9CD660A-A109-4614-AA4B-D8A577C89669}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ScrewMes.App", "ScrewMes.App\ScrewMes.App.csproj", "{38EB8AAD-3D06-4ECE-844C-DFCF69DF6356}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{2D3EA778-767D-4E67-B7EC-A7699CC9907B}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{2D3EA778-767D-4E67-B7EC-A7699CC9907B}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{2D3EA778-767D-4E67-B7EC-A7699CC9907B}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{2D3EA778-767D-4E67-B7EC-A7699CC9907B}.Release|Any CPU.Build.0 = Release|Any CPU
+		{6B5C3584-455A-4121-9B5D-0B2D2115F0EC}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{6B5C3584-455A-4121-9B5D-0B2D2115F0EC}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{6B5C3584-455A-4121-9B5D-0B2D2115F0EC}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{6B5C3584-455A-4121-9B5D-0B2D2115F0EC}.Release|Any CPU.Build.0 = Release|Any CPU
+		{B61DB5CD-5DBB-41B6-B871-B809F34BE9BC}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{B61DB5CD-5DBB-41B6-B871-B809F34BE9BC}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{B61DB5CD-5DBB-41B6-B871-B809F34BE9BC}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{B61DB5CD-5DBB-41B6-B871-B809F34BE9BC}.Release|Any CPU.Build.0 = Release|Any CPU
+		{D909DD0C-F5CB-4F61-A645-86B529E5C1B2}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{D909DD0C-F5CB-4F61-A645-86B529E5C1B2}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{D909DD0C-F5CB-4F61-A645-86B529E5C1B2}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{D909DD0C-F5CB-4F61-A645-86B529E5C1B2}.Release|Any CPU.Build.0 = Release|Any CPU
+		{A9CD660A-A109-4614-AA4B-D8A577C89669}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{A9CD660A-A109-4614-AA4B-D8A577C89669}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{A9CD660A-A109-4614-AA4B-D8A577C89669}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{A9CD660A-A109-4614-AA4B-D8A577C89669}.Release|Any CPU.Build.0 = Release|Any CPU
+		{38EB8AAD-3D06-4ECE-844C-DFCF69DF6356}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{38EB8AAD-3D06-4ECE-844C-DFCF69DF6356}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{38EB8AAD-3D06-4ECE-844C-DFCF69DF6356}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{38EB8AAD-3D06-4ECE-844C-DFCF69DF6356}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+EndGlobal

@@ -1,0 +1,27 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <OutputType>WinExe</OutputType>
+    <TargetFramework>net8.0-windows</TargetFramework>
+    <Nullable>enable</Nullable>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <UseWPF>true</UseWPF>
+    <RootNamespace>ScrewMes.App</RootNamespace>
+    <AssemblyName>ScrewMes.App</AssemblyName>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="CommunityToolkit.Mvvm" Version="8.4.2" />
+    <PackageReference Include="LiveChartsCore.SkiaSharpView.WPF" Version="2.0.5" />
+    <PackageReference Include="Microsoft.EntityFrameworkCore.SqlServer" Version="8.0.11" />
+    <PackageReference Include="Microsoft.Extensions.DependencyInjection" Version="8.0.1" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\ScrewMes.Core\ScrewMes.Core.csproj" />
+    <ProjectReference Include="..\ScrewMes.Data\ScrewMes.Data.csproj" />
+    <ProjectReference Include="..\ScrewMes.Inference\ScrewMes.Inference.csproj" />
+    <ProjectReference Include="..\ScrewMes.Simulator\ScrewMes.Simulator.csproj" />
+  </ItemGroup>
+
+</Project>

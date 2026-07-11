@@ -1,0 +1,10 @@
+<Application x:Class="ScrewMes.App.App"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:local="clr-namespace:ScrewMes.App">
+  <Application.Resources>
+    <local:PathToImageConverter x:Key="PathToImage"/>
+    <local:VerdictToBrushConverter x:Key="VerdictToBrush"/>
+    <local:BadToBannerBrushConverter x:Key="BadToBanner"/>
+  </Application.Resources>
+</Application>

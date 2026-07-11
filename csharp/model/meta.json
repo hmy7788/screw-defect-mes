@@ -1,0 +1,33 @@
+{
+  "image_size": 320,
+  "preprocess": {
+    "scale": "div255",
+    "layout": "NCHW",
+    "resize_in_graph": true,
+    "normalize_in_graph": true,
+    "mean": [
+      0.485,
+      0.456,
+      0.406
+    ],
+    "std": [
+      0.229,
+      0.224,
+      0.225
+    ]
+  },
+  "onnx": {
+    "input": "input",
+    "outputs": [
+      "pred_score",
+      "pred_label",
+      "anomaly_map",
+      "pred_mask"
+    ],
+    "score_output": "pred_score",
+    "map_output": "anomaly_map"
+  },
+  "threshold": 0.513,
+  "max_abs_err": 5.3166246414160234e-05,
+  "anomalib_version": "2.5.0"
+}

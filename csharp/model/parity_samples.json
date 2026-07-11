@@ -1,0 +1,218 @@
+[
+  {
+    "image_id": "good_015",
+    "onnx_score": 0.4535113573074341,
+    "py_score": 0.4535,
+    "verdict": "good"
+  },
+  {
+    "image_id": "good_007",
+    "onnx_score": 0.4149266481399536,
+    "py_score": 0.4149,
+    "verdict": "good"
+  },
+  {
+    "image_id": "good_013",
+    "onnx_score": 0.4777766466140747,
+    "py_score": 0.4778,
+    "verdict": "good"
+  },
+  {
+    "image_id": "good_031",
+    "onnx_score": 0.3799154758453369,
+    "py_score": 0.3799,
+    "verdict": "good"
+  },
+  {
+    "image_id": "good_005",
+    "onnx_score": 0.5914026498794556,
+    "py_score": 0.5914,
+    "verdict": "bad"
+  },
+  {
+    "image_id": "good_000",
+    "onnx_score": 0.45818257331848145,
+    "py_score": 0.4582,
+    "verdict": "good"
+  },
+  {
+    "image_id": "good_040",
+    "onnx_score": 0.3726882338523865,
+    "py_score": 0.3727,
+    "verdict": "good"
+  },
+  {
+    "image_id": "good_002",
+    "onnx_score": 0.4255335032939911,
+    "py_score": 0.4255,
+    "verdict": "good"
+  },
+  {
+    "image_id": "good_037",
+    "onnx_score": 0.4524531662464142,
+    "py_score": 0.4524,
+    "verdict": "good"
+  },
+  {
+    "image_id": "good_001",
+    "onnx_score": 0.5117826461791992,
+    "py_score": 0.5118,
+    "verdict": "good"
+  },
+  {
+    "image_id": "good_036",
+    "onnx_score": 0.4475175738334656,
+    "py_score": 0.4475,
+    "verdict": "good"
+  },
+  {
+    "image_id": "good_025",
+    "onnx_score": 0.5071108341217041,
+    "py_score": 0.5071,
+    "verdict": "good"
+  },
+  {
+    "image_id": "good_020",
+    "onnx_score": 0.4460678696632385,
+    "py_score": 0.4461,
+    "verdict": "good"
+  },
+  {
+    "image_id": "good_026",
+    "onnx_score": 0.4130622148513794,
+    "py_score": 0.4131,
+    "verdict": "good"
+  },
+  {
+    "image_id": "good_018",
+    "onnx_score": 0.47602954506874084,
+    "py_score": 0.476,
+    "verdict": "good"
+  },
+  {
+    "image_id": "good_008",
+    "onnx_score": 0.5458934307098389,
+    "py_score": 0.5459,
+    "verdict": "bad"
+  },
+  {
+    "image_id": "good_028",
+    "onnx_score": 0.4568168520927429,
+    "py_score": 0.4568,
+    "verdict": "good"
+  },
+  {
+    "image_id": "good_022",
+    "onnx_score": 0.5083910822868347,
+    "py_score": 0.5084,
+    "verdict": "good"
+  },
+  {
+    "image_id": "scratch_neck_023",
+    "onnx_score": 0.8661226630210876,
+    "py_score": 0.8661,
+    "verdict": "bad"
+  },
+  {
+    "image_id": "manipulated_front_008",
+    "onnx_score": 0.7062059044837952,
+    "py_score": 0.7062,
+    "verdict": "bad"
+  },
+  {
+    "image_id": "scratch_neck_011",
+    "onnx_score": 0.7932125926017761,
+    "py_score": 0.7932,
+    "verdict": "bad"
+  },
+  {
+    "image_id": "scratch_head_020",
+    "onnx_score": 0.6693999767303467,
+    "py_score": 0.6694,
+    "verdict": "bad"
+  },
+  {
+    "image_id": "scratch_head_007",
+    "onnx_score": 0.763500452041626,
+    "py_score": 0.7635,
+    "verdict": "bad"
+  },
+  {
+    "image_id": "scratch_neck_007",
+    "onnx_score": 1.0,
+    "py_score": 1.0,
+    "verdict": "bad"
+  },
+  {
+    "image_id": "manipulated_front_013",
+    "onnx_score": 0.719402551651001,
+    "py_score": 0.7194,
+    "verdict": "bad"
+  },
+  {
+    "image_id": "scratch_neck_002",
+    "onnx_score": 0.6063809394836426,
+    "py_score": 0.6064,
+    "verdict": "bad"
+  },
+  {
+    "image_id": "thread_side_002",
+    "onnx_score": 0.8010097742080688,
+    "py_score": 0.801,
+    "verdict": "bad"
+  },
+  {
+    "image_id": "manipulated_front_003",
+    "onnx_score": 0.8829745054244995,
+    "py_score": 0.883,
+    "verdict": "bad"
+  },
+  {
+    "image_id": "scratch_head_021",
+    "onnx_score": 0.9158758521080017,
+    "py_score": 0.9159,
+    "verdict": "bad"
+  },
+  {
+    "image_id": "manipulated_front_000",
+    "onnx_score": 0.7598890662193298,
+    "py_score": 0.7599,
+    "verdict": "bad"
+  },
+  {
+    "image_id": "thread_side_000",
+    "onnx_score": 0.47541773319244385,
+    "py_score": 0.4754,
+    "verdict": "good"
+  },
+  {
+    "image_id": "thread_top_014",
+    "onnx_score": 0.9325922727584839,
+    "py_score": 0.9326,
+    "verdict": "bad"
+  },
+  {
+    "image_id": "scratch_head_019",
+    "onnx_score": 0.8246972560882568,
+    "py_score": 0.8247,
+    "verdict": "bad"
+  },
+  {
+    "image_id": "thread_side_016",
+    "onnx_score": 0.6253098249435425,
+    "py_score": 0.6253,
+    "verdict": "bad"
+  },
+  {
+    "image_id": "scratch_head_005",
+    "onnx_score": 0.9262887239456177,
+    "py_score": 0.9263,
+    "verdict": "bad"
+  },
+  {
+    "image_id": "scratch_neck_006",
+    "onnx_score": 1.0,
+    "py_score": 1.0,
+    "verdict": "bad"
+  }
+]
