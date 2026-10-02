@@ -6,20 +6,20 @@
 ## 데이터 흐름
 
 ```
-④ simulator        ② api(추론)         ③ storage        ⑤ dashboard
+④ simulator        ① core(추론)        ③ storage        ⑤ dashboard
 test 이미지를  ──→  PatchCore로    ──→  판정 결과를  ──→  실시간 화면:
-1장씩 전송         good/bad+점수        SQLite에         생산현황·불량률 추이
-(라인 시뮬)        +히트맵+유형         한 줄씩 기록      ·유형분포·불량 알람
-                      ↑
-                  ① core/inference (모델 1장 추론)
+1장씩 흘림         good/bad+점수        SQLite에         생산현황·불량률/점수 추이
+(라인 시뮬)        +위치 히트맵         한 줄씩 기록      ·히트맵 갤러리·불량 알람
+
+(② api/ — FastAPI 로 추론을 분리하는 선택 과제, 현재 빈 스텁)
 ```
 
 ## 구성
 
 | 폴더 | 역할 |
 |------|------|
-| `core/` | 학습된 모델 로드 + 사진 1장 추론(점수·히트맵·판정·유형) |
-| `api/` | 추론을 HTTP 서비스로 노출 (FastAPI, `POST /predict`) |
+| `core/` | 학습된 모델 로드 + 사진 1장 추론(점수·히트맵·good/bad 판정) + ONNX export |
+| `api/` | (미구현 스텁) 추론을 HTTP 서비스로 노출 (FastAPI, `POST /predict`) |
 | `storage/` | 판정 결과 DB (SQLite) |
 | `simulator/` | test 이미지를 시간 간격 두고 1장씩 흘려보내는 라인 시뮬레이터 |
 | `dashboard/` | 관제 대시보드 (Streamlit) |
@@ -28,7 +28,7 @@ test 이미지를  ──→  PatchCore로    ──→  판정 결과를  ─�
 ## 실행 순서
 
 ```bash
-# 0) (최초 1회) 학습 ckpt -> 배포용 .pt
+# 0) (최초 1회) 학습 ckpt -> 배포용 .pt   (ckpt 없으면 python experiments/anomaly/run_resolution_sweep.py 0.01 로 생성, 약 9분)
 python -m mes.core.export_model
 
 # 1) (터미널 A) 라인 시뮬레이터: test 이미지를 1초당 1장, 양품 90% 비율로 흘려보냄

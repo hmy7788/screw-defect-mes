@@ -26,8 +26,8 @@ anomalib `ExportType.ONNX` 산출물은 **전처리(Resize+Normalize)·후처리
 `pred_score`(정규화 이상점수)가 나오고, 여기에 임계값 0.513을 적용하면 끝이다.
 
 검증(`ScrewMes.ParityCheck`): test 36장에서 **C# 점수 == Python predict_one** —
-최대 |Δ| = **0.00010**, 판정 일치 **36/36**. (전처리 형태는 `../mes/core/_onnx_probe.py`로
-실측해 `model/meta.json`에 기록 → C#이 그대로 따른다.)
+최대 |Δ| = **0.00010**(최초 학습 모델; 재학습 모델은 0.0016), 판정 일치 **36/36**. (전처리 형태는 export 시 실측해
+`model/meta.json`에 기록 → C#이 그대로 따른다.)
 
 ## 사전 요구
 
