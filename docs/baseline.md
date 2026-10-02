@@ -37,7 +37,7 @@ flowchart LR
 
 ImageNet pretrained 3종, 헤드만 교체 후 전체 파인튜닝.
 
-**가중치 탐색 (Grid Search)** — 대상 가중치 w: 1.0, 1.5, ..., 5.0 (0.5 간격 9개), 가중치마다 Stratified 5-Fold CV 수행
+**가중치 탐색 (Grid Search)** — 불량 클래스 가중치 w를 1.0부터 5.0까지 0.5 간격 9개로 바꿔 가며, w마다 Stratified 5-Fold CV를 새로 돌려 Mean Max F2를 비교하고 가장 높은 w를 챔피언 가중치로 정한다
 
 각 fold의 클래스 구성 (fold 내 클래스 비율 3.25 : 1 유지, Val 85장):
 
@@ -51,21 +51,30 @@ ImageNet pretrained 3종, 헤드만 교체 후 전체 파인튜닝.
 | Type5 | 4 | 4 | 4 | 4 | 4 |
 
 ```mermaid
+---
+config:
+  flowchart:
+    nodeSpacing: 6
+    rankSpacing: 16
+    padding: 6
+---
 flowchart LR
-    subgraph CV["Stratified 5-Fold CV"]
+    W["대상 가중치 w (9개)<br/>1.0, 1.5, 2.0, 2.5, 3.0<br/>3.5, 4.0, 4.5, 5.0<br/>하나씩 바꿔가며 반복"] -----> CV
+    subgraph CV["w마다 Stratified 5-Fold CV (fold마다 Good 65 + Type1~5 각 4, 클래스 비율 3.25:1 유지)"]
         H1["Fold 1"] ~~~ H2["Fold 2"] ~~~ H3["Fold 3"] ~~~ H4["Fold 4"] ~~~ H5["Fold 5"] ~~~ HZ[" "]
-        A1["Val"] ~~~ A2["Train"] ~~~ A3["Train"] ~~~ A4["Train"] ~~~ A5["Train"] --> X1["Max F2 산출"]
-        B1["Train"] ~~~ B2["Val"] ~~~ B3["Train"] ~~~ B4["Train"] ~~~ B5["Train"] --> X2["Max F2 산출"]
-        C1["Train"] ~~~ C2["Train"] ~~~ C3["Val"] ~~~ C4["Train"] ~~~ C5["Train"] --> X3["Max F2 산출"]
-        D1["Train"] ~~~ D2["Train"] ~~~ D3["Train"] ~~~ D4["Val"] ~~~ D5["Train"] --> X4["Max F2 산출"]
-        E1["Train"] ~~~ E2["Train"] ~~~ E3["Train"] ~~~ E4["Train"] ~~~ E5["Val"] --> X5["Max F2 산출"]
+        A1["&nbsp;Val&nbsp;&nbsp;"] ~~~ A2["Train"] ~~~ A3["Train"] ~~~ A4["Train"] ~~~ A5["Train"] --> X1["Max F2 산출"]
+        B1["Train"] ~~~ B2["&nbsp;Val&nbsp;&nbsp;"] ~~~ B3["Train"] ~~~ B4["Train"] ~~~ B5["Train"] --> X2["Max F2 산출"]
+        C1["Train"] ~~~ C2["Train"] ~~~ C3["&nbsp;Val&nbsp;&nbsp;"] ~~~ C4["Train"] ~~~ C5["Train"] --> X3["Max F2 산출"]
+        D1["Train"] ~~~ D2["Train"] ~~~ D3["Train"] ~~~ D4["&nbsp;Val&nbsp;&nbsp;"] ~~~ D5["Train"] --> X4["Max F2 산출"]
+        E1["Train"] ~~~ E2["Train"] ~~~ E3["Train"] ~~~ E4["Train"] ~~~ E5["&nbsp;Val&nbsp;&nbsp;"] --> X5["Max F2 산출"]
     end
-    X1 --> MEAN["5개 Fold의 Max F2 평균<br/>(Mean Max F2)"]
+    X1 --> MEAN["w의 Mean Max F2<br/>(5개 Fold의 Max F2 평균)"]
     X2 --> MEAN
     X3 --> MEAN
     X4 --> MEAN
     X5 --> MEAN
-    MEAN --> BEST["Mean Max F2가 가장 높은 Weight<br/>= 최적 W 선정"]
+    MEAN --> CMP["9개 w의 Mean Max F2 비교<br/>(w = 1.0 ... 5.0)"]
+    CMP --> BEST["Mean Max F2가 가장 높은 w<br/>= 챔피언 가중치"]
     classDef val fill:#fbbf24,stroke:#1f2937,color:#111827
     classDef train fill:#22a559,stroke:#1f2937,color:#ffffff
     classDef head fill:none,stroke:none,color:#111827
