@@ -28,6 +28,6 @@
     "map_output": "anomaly_map"
   },
   "threshold": 0.513,
-  "max_abs_err": 5.3166246414160234e-05,
-  "anomalib_version": "2.5.0"
+  "max_abs_err": 0.0016221330165863135,
+  "anomalib_version": "2.5.1"
 }
