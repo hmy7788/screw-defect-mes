@@ -11,7 +11,8 @@ try:
     sys.stderr.reconfigure(encoding="utf-8")
 except Exception:
     pass
-sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
+sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(__file__), "..", "..")))   # 레포 루트
+from src.common.paths import REPO_ROOT, DATA_DIR, OUTPUTS_DIR, RESULTS_DIR
 
 import torch
 import pandas as pd
@@ -20,19 +21,22 @@ from anomalib.models import Patchcore
 from anomalib.pre_processing import PreProcessor
 from torchvision.transforms.v2 import Compose, Resize, Normalize
 
-from src.ad_data import build_screw_datamodule
-from src.ad_eval import collect_predictions, evaluate_all
+from src.anomaly.ad_data import build_screw_datamodule
+from src.anomaly.ad_eval import collect_predictions, evaluate_all
 
 MEAN = [0.485, 0.456, 0.406]
 STD = [0.229, 0.224, 0.225]
 RES_LIST = [256, 320, 512]
+# 선택 인자: 해상도 목록(쉼표 구분). 예: `python experiments/anomaly/run_resolution_sweep.py 0.01 320` → 320만 학습.
+if len(sys.argv) > 2:
+    RES_LIST = [int(r) for r in sys.argv[2].split(",")]
 BATCH = {256: 8, 320: 4, 512: 2}
 
-# coreset 비율: 명령줄 인자(예: `python run_resolution_sweep.py 0.01`)로 조정 가능.
+# coreset 비율: 명령줄 인자(예: `python experiments/anomaly/run_resolution_sweep.py 0.01`)로 조정 가능.
 # 0.1=정확하지만 느림(320=70분/512=OOM), 0.01=수십배 빠름·정확도 유지 기대.
 CORESET = float(sys.argv[1]) if len(sys.argv) > 1 else 0.1
 # 출력 폴더를 coreset 값으로 태깅 → 0.1/0.01 결과가 서로 덮어쓰이지 않음.
-OUT = f"outputs/sweep_cs{str(CORESET).replace('.', '')}"
+OUT = os.path.join(OUTPUTS_DIR, f"sweep_cs{str(CORESET).replace('.', '')}")
 os.makedirs(OUT, exist_ok=True)
 print(f"[설정] coreset_sampling_ratio={CORESET}  출력={OUT}")
 
@@ -56,7 +60,7 @@ for res in RES_LIST:
         torch.manual_seed(42)
 
         bs = BATCH[res]
-        dm = build_screw_datamodule(root="data", category="screw",
+        dm = build_screw_datamodule(root=DATA_DIR, category="screw",
                                     train_batch_size=bs, eval_batch_size=bs,
                                     num_workers=0, seed=42)
         dm.setup()

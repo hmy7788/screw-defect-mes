@@ -3,7 +3,7 @@
 MVTec `screw`, good-only 학습. 세 이상탐지 **방법**을 동일 데이터·동일 지표체계로 비교.
 coreset 은 PatchCore 전용 손잡이라 비교 공통축은 **해상도(256/320)** 로 둠.
 
-- 생성 스크립트: [`run_model_comparison.py`](../../run_model_comparison.py) (PaDiM/EfficientAD)
+- 생성 스크립트: [`run_model_comparison.py`](../../../experiments/anomaly/run_model_comparison.py) (PaDiM/EfficientAD)
 - PatchCore 수치는 coreset 0.1 결과([../sweep_cs01/](../sweep_cs01/))에서 가져옴.
 - EfficientAD는 학습형이라 `model_size=small`, **20 epoch**(간이 학습)로 실행.
 
@@ -54,4 +54,4 @@ per_type CSV: [padim](per_type_padim_res320.csv) / [efficientad](per_type_effici
 > 개선 여지 있음 → "동일·간이 학습 조건 비교"로 해석할 것. PaDiM/PatchCore는 fit 1회(epoch 무관).
 
 > 전체 히트맵·체크포인트는 용량 문제로 레포 미포함.
-> 재현: `python run_model_comparison.py all 20` (PatchCore는 `run_resolution_sweep.py`).
+> 재현: `python experiments/anomaly/run_model_comparison.py all 20` (PatchCore는 `experiments/anomaly/run_resolution_sweep.py`).

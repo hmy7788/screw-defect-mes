@@ -1,0 +1,7 @@
+experiment              , model      , bad_weight, val_f2, test_precision, test_recall, test_f2, image_auroc, type   , n , pixel_auroc, aupro
+kfold_gt_localization_eval, ResNet-18 ,        2.0, 0.9174,         0.8500,      0.8947,  0.8854,      0.9781, overall, 19,      0.9213, 0.8142
+kfold_gt_localization_eval, ResNet-18 ,        2.0,       ,               ,            ,        ,            , type1  ,  4,      0.9282, 0.7429
+kfold_gt_localization_eval, ResNet-18 ,        2.0,       ,               ,            ,        ,            , type2  ,  4,      0.9646, 0.8822
+kfold_gt_localization_eval, ResNet-18 ,        2.0,       ,               ,            ,        ,            , type3  ,  5,      0.9799, 0.9224
+kfold_gt_localization_eval, ResNet-18 ,        2.0,       ,               ,            ,        ,            , type4  ,  3,      0.6498, 0.4489
+kfold_gt_localization_eval, ResNet-18 ,        2.0,       ,               ,            ,        ,            , type5  ,  3,      0.9865, 0.9520

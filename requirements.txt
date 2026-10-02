@@ -1,13 +1,30 @@
-# === 1단계: CUDA 12.1 빌드 PyTorch 먼저 설치 ===
-# (RTX 20/30/40 시리즈 등. GPU 미사용이면 이 줄 생략하고 일반 torch 설치)
-#   pip install torch==2.5.1 torchvision==0.20.1 --index-url https://download.pytorch.org/whl/cu121
+# 레포 공통 의존성 (baseline · 이상탐지 · Python MES 가 같은 환경 하나로 동작)
 #
-# === 2단계: 아래 패키지 설치 ===
-# (anomalib이 torch를 덮어쓰지 않도록 위 torch를 먼저 고정 설치)
+# === 1단계: CUDA 빌드 PyTorch 를 먼저 설치 (GPU 에 맞는 버전) ===
+#   pip install torch torchvision --index-url https://download.pytorch.org/whl/cu128
+#   (anomalib 이 CPU torch 로 덮어쓰지 않도록 반드시 먼저 설치. GPU 미사용이면 일반 torch)
+#
+# === 2단계: pip install -r requirements.txt ===
+# 검증 환경: torch 2.11.0+cu128 / torchvision 0.26.0 / anomalib 2.5.1 / numpy 2.5.1
 
-anomalib==2.5.0
+# --- 이상탐지 ---
+anomalib>=2.5.0
+# --- baseline(지도학습·Grad-CAM) ---
+grad-cam>=1.5.5
+seaborn
+matplotlib
+openpyxl
+# --- 공통 ---
 scikit-learn>=1.3
 pandas>=2.0
 numpy>=1.26
+pillow
+# --- Python MES PoC (mes/) ---
+streamlit
+fastapi
+uvicorn[standard]
+# --- ONNX export (mes/core/export_onnx.py → C# MES) ---
+onnx
+onnxruntime
 
-# anomalib이 함께 설치하는 주요 의존성(참고): lightning, torchmetrics, timm, kornia, opencv-python
+# anomalib 이 함께 설치하는 주요 의존성(참고): lightning, torchmetrics, timm, kornia, opencv-python

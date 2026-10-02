@@ -33,4 +33,4 @@ MVTec `screw`, good-only 학습. 256 vs 320 비교 (512는 8GB GPU에서 OOM으�
 `heatmaps_type4/res256` vs `heatmaps_type4/res320` — 동일 Type4 샘플(000~002)의 이상맵.
 320에서 나사산 측면 결함 위치가 더 또렷하게 잡힘.
 
-> 전체 히트맵(320장)·체크포인트는 용량 문제로 레포에 미포함. `run_resolution_sweep.py` 재실행으로 생성.
+> 전체 히트맵(320장)·체크포인트는 용량 문제로 레포에 미포함. `experiments/anomaly/run_resolution_sweep.py` 재실행으로 생성.

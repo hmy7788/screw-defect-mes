@@ -9,9 +9,9 @@ PatchCore 결과(run_resolution_sweep.py)와 **같은 지표 체계**(collect_pr
                   첫 실행 시 imagenette2.tgz(~1.5GB) 자동 다운로드(인터넷 필요).
 
 실행:
-  python run_model_comparison.py padim              # PaDiM만 (빠름)
-  python run_model_comparison.py efficient_ad 20    # EfficientAD만, 20 epoch
-  python run_model_comparison.py all 20             # 둘 다
+  python experiments/anomaly/run_model_comparison.py padim              # PaDiM만 (빠름)
+  python experiments/anomaly/run_model_comparison.py efficient_ad 20    # EfficientAD만, 20 epoch
+  python experiments/anomaly/run_model_comparison.py all 20             # 둘 다
 """
 import os
 os.environ.setdefault("KMP_DUPLICATE_LIB_OK", "TRUE")
@@ -21,7 +21,8 @@ try:
     sys.stderr.reconfigure(encoding="utf-8")
 except Exception:
     pass
-sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
+sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(__file__), "..", "..")))   # 레포 루트
+from src.common.paths import REPO_ROOT, DATA_DIR, OUTPUTS_DIR, RESULTS_DIR
 
 import torch
 import pandas as pd
@@ -30,13 +31,13 @@ from anomalib.models import Padim, EfficientAd
 from anomalib.pre_processing import PreProcessor
 from torchvision.transforms.v2 import Compose, Resize, Normalize
 
-from src.ad_data import build_screw_datamodule
-from src.ad_eval import collect_predictions, evaluate_all
+from src.anomaly.ad_data import build_screw_datamodule
+from src.anomaly.ad_eval import collect_predictions, evaluate_all
 
 MEAN = [0.485, 0.456, 0.406]
 STD = [0.229, 0.224, 0.225]
 RES_LIST = [256, 320]
-OUT = "outputs/model_compare"
+OUT = os.path.join(OUTPUTS_DIR, "model_compare")
 os.makedirs(OUT, exist_ok=True)
 
 # 명령줄 인자: 어떤 모델을 / EfficientAD epoch 몇 번
@@ -93,7 +94,7 @@ for name in targets:
             torch.manual_seed(42)
 
             bs = cfg["batch"][res]
-            dm = build_screw_datamodule(root="data", category="screw",
+            dm = build_screw_datamodule(root=DATA_DIR, category="screw",
                                         train_batch_size=bs, eval_batch_size=bs,
                                         num_workers=0, seed=42)
             dm.setup()

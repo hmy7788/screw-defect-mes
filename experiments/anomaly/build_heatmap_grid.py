@@ -6,9 +6,9 @@ good은 가장 이상점수가 낮은(깨끗한) 1장.
 
 렌더는 good/결함을 '공통 색 스케일'로 칠한다 → good은 차분, 결함만 뜨겁게(정직한 대조).
 
-출력: results/figures/heatmap_portfolio.png (good+Type1+Type4+1, 1행)
-      results/figures/heatmap_readme.png    (good+Type1~5, 2행)
-실행: python build_heatmap_grid.py
+출력: results/anomaly/figures/heatmap_portfolio.png (good+Type1+Type4+1, 1행)
+      results/anomaly/figures/heatmap_readme.png    (good+Type1~5, 2행)
+실행: python experiments/anomaly/build_heatmap_grid.py
 """
 import os
 os.environ.setdefault("KMP_DUPLICATE_LIB_OK", "TRUE")
@@ -18,7 +18,8 @@ try:
     sys.stdout.reconfigure(encoding="utf-8")
 except Exception:
     pass
-sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
+sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(__file__), "..", "..")))   # 레포 루트
+from src.common.paths import REPO_ROOT, DATA_DIR, OUTPUTS_DIR, RESULTS_DIR
 
 import numpy as np
 from PIL import Image, ImageDraw, ImageFont
@@ -28,10 +29,10 @@ from mes import config
 from mes.core.inference import ScrewInferencer
 
 RES = config.IMAGE_SIZE
-ROOT = os.path.dirname(os.path.abspath(__file__))
-TEST = os.path.join(ROOT, "data", "screw", "test")
-GT = os.path.join(ROOT, "data", "screw", "ground_truth")
-OUT_DIR = os.path.join(ROOT, "results", "figures")
+ROOT = REPO_ROOT
+TEST = os.path.join(DATA_DIR, "screw", "test")
+GT = os.path.join(DATA_DIR, "screw", "ground_truth")
+OUT_DIR = os.path.join(RESULTS_DIR, "anomaly", "figures")
 FONT_PATH = r"C:\Windows\Fonts\malgun.ttf"
 
 # 유형 폴더 → 라벨

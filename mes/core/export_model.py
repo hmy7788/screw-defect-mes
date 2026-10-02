@@ -28,7 +28,7 @@ STD = [0.229, 0.224, 0.225]
 
 
 def make_pp(res):
-    """학습(run_resolution_sweep.py)과 동일한 전처리: Resize + ImageNet 정규화."""
+    """학습(experiments/anomaly/run_resolution_sweep.py)과 동일한 전처리: Resize + ImageNet 정규화."""
     return PreProcessor(transform=Compose([
         Resize((res, res), antialias=True),
         Normalize(mean=MEAN, std=STD),
@@ -38,7 +38,7 @@ def make_pp(res):
 def main():
     if not config.MODEL_CKPT.exists():
         print(f"[오류] ckpt 없음: {config.MODEL_CKPT}")
-        print("  -> `python run_resolution_sweep.py 0.01` 로 먼저 학습/생성하세요.")
+        print("  -> `python experiments/anomaly/run_resolution_sweep.py 0.01` 로 먼저 학습/생성하세요.")
         sys.exit(1)
 
     # 학습과 동일 설정으로 모델 골격 빌드 (가중치/메모리뱅크는 ckpt_path에서 로드됨)

@@ -2,7 +2,7 @@
 
 정확도(AUROC/AUPRO)는 스윕에서 쟀지만 '속도'는 한 번도 측정하지 않았다.
 PatchCore는 추론 시 메모리뱅크와 k-NN 거리계산을 하므로, 메모리뱅크 크기(coreset)가
-곧 지연으로 직결된다. 이 스크립트는 그걸 정량화한다 → DECISIONS.md '정확도 vs 속도' 완성.
+곧 지연으로 직결된다. 이 스크립트는 그걸 정량화한다 → docs/decisions.md '정확도 vs 속도' 완성.
 
 측정 원칙(중요):
   - **warm-up**: 첫 추론은 CUDA 커널 컴파일로 비정상적으로 느림 → 앞 N장은 버린다.
@@ -10,8 +10,8 @@ PatchCore는 추론 시 메모리뱅크와 k-NN 거리계산을 하므로, 메�
   - **end-to-end**: .pt에 내장된 전처리(Resize+Normalize)+forward+후처리 전 구간을 잰다(배포 현실).
   - **p50/p95**: 평균만이 아니라 꼬리 지연도 본다(라인 반응성은 최악값이 중요).
 
-실행: python bench_latency.py            (기본: cs01/320 vs cs001/320)
-      python bench_latency.py all        (256 변형까지 포함)
+실행: python experiments/anomaly/bench_latency.py            (기본: cs01/320 vs cs001/320)
+      python experiments/anomaly/bench_latency.py all        (256 변형까지 포함)
 """
 import os
 os.environ.setdefault("KMP_DUPLICATE_LIB_OK", "TRUE")
@@ -22,7 +22,8 @@ try:
     sys.stderr.reconfigure(encoding="utf-8")
 except Exception:
     pass
-sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
+sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(__file__), "..", "..")))   # 레포 루트
+from src.common.paths import REPO_ROOT, DATA_DIR, OUTPUTS_DIR, RESULTS_DIR
 
 import torch
 import pandas as pd
@@ -35,10 +36,10 @@ from torchvision.transforms.v2 import Compose, Resize, Normalize
 MEAN = [0.485, 0.456, 0.406]
 STD = [0.229, 0.224, 0.225]
 
-ROOT = os.path.dirname(os.path.abspath(__file__))
-TEST_DIR = os.path.join(ROOT, "data", "screw", "test")
-BENCH_ROOT = os.path.join(ROOT, "outputs", "_bench")   # 임시 .pt (gitignore)
-RESULTS_DIR = os.path.join(ROOT, "results", "latency")
+ROOT = REPO_ROOT
+TEST_DIR = os.path.join(DATA_DIR, "screw", "test")
+BENCH_ROOT = os.path.join(OUTPUTS_DIR, "_bench")   # 임시 .pt (gitignore)
+RESULTS_DIR = os.path.join(RESULTS_DIR, "anomaly", "latency")
 
 # (이름, ckpt 상대경로, coreset, 해상도)
 VARIANTS = [

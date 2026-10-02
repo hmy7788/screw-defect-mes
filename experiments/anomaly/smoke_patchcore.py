@@ -14,20 +14,21 @@ except Exception:
     pass
 import torch
 
-sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
-from src.ad_data import build_screw_datamodule
-from src.anomaly import build_model, run_experiment
+sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(__file__), "..", "..")))   # 레포 루트
+from src.common.paths import REPO_ROOT, DATA_DIR, OUTPUTS_DIR, RESULTS_DIR
+from src.anomaly.ad_data import build_screw_datamodule
+from src.anomaly.models import build_model, run_experiment
 
 torch.manual_seed(42)
 
-OUT = os.path.join("outputs", "smoke_patchcore")
+OUT = os.path.join(OUTPUTS_DIR, "smoke_patchcore")
 
 print("=" * 60)
 print("PatchCore 스모크런 시작")
 print("GPU:", torch.cuda.get_device_name(0) if torch.cuda.is_available() else "CPU")
 print("=" * 60)
 
-dm = build_screw_datamodule(root="data", category="screw",
+dm = build_screw_datamodule(root=DATA_DIR, category="screw",
                             train_batch_size=8, eval_batch_size=8, num_workers=0, seed=42)
 dm.setup()
 print(f"데이터 - train:{len(dm.train_data)}  val:{len(dm.val_data)}  test:{len(dm.test_data)}")

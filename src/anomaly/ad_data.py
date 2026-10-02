@@ -10,7 +10,10 @@ MVTec AD `screw` 카테고리(원본 + ground_truth 마스크)를 anomalib으로
     문자열('train'/'test')로 넘겨 이 문제를 우회한다. 검증: train 320 / test 160 정상.
 """
 
+import os
+
 from anomalib.data import MVTecAD
+from src.common.paths import DATA_DIR
 from anomalib.data.datasets.image.mvtecad import MVTecADDataset
 
 
@@ -26,8 +29,18 @@ class MVTecADFixed(MVTecAD):
         )
 
 
+def _anomalib_root(path):
+    """anomalib 은 데이터 경로에 ASCII 출력가능 문자([ -~])만 허용한다(`validate_path`).
+    한글 사용자 폴더 등 비ASCII 절대경로는 거부되므로, cwd 기준 상대경로로 넘긴다(레포 루트에서 실행하면 'data').
+    다른 드라이브라 상대경로를 만들 수 없으면 절대경로를 그대로 쓴다."""
+    try:
+        return os.path.relpath(path)
+    except ValueError:
+        return path
+
+
 def build_screw_datamodule(
-    root="data",
+    root=DATA_DIR,
     category="screw",
     train_batch_size=8,
     eval_batch_size=8,
@@ -42,7 +55,7 @@ def build_screw_datamodule(
     임계값을 train good에서 따로 잡고 싶으면 val_split_mode 등을 kwargs로 조정.
     """
     return MVTecADFixed(
-        root=root,
+        root=_anomalib_root(root),
         category=category,
         train_batch_size=train_batch_size,
         eval_batch_size=eval_batch_size,

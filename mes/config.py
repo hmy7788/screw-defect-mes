@@ -10,7 +10,7 @@ ROOT = Path(__file__).resolve().parent.parent
 # --- 모델 ---
 # 연구 트랙에서 학습된 PatchCore 체크포인트를 재사용 (coreset 0.01, 해상도 320).
 # 메모리뱅크가 작아 실시간 추론이 빠르고, 위치 정확도(AUPRO 0.956)도 최고급.
-# (outputs/ 는 gitignore라 로컬에만 존재 — 없으면 `python run_resolution_sweep.py 0.01` 재생성)
+# (outputs/ 는 gitignore라 로컬에만 존재 — 없으면 `python experiments/anomaly/run_resolution_sweep.py 0.01` 재생성)
 MODEL_CKPT = ROOT / "outputs" / "sweep_cs001" / "res320" / "Patchcore" / \
     "MVTecADFixed" / "screw" / "v0" / "weights" / "lightning" / "model.ckpt"
 IMAGE_SIZE = 320               # 학습 해상도와 일치시킬 것

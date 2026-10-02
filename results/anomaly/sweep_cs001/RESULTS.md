@@ -46,5 +46,5 @@ coreset 0.01 기준 (괄호는 coreset 0.1 대비):
   8GB에서 OOM. 메모리뱅크 크기와 무관. 타일링/AMP 등 별도 기법이 필요하나 비용 대비 가치 낮음 →
   320에서 위치 개선이 이미 입증되어 512는 미진행으로 마무리.
 
-> 전체 히트맵·체크포인트는 용량 문제로 레포 미포함. `python run_resolution_sweep.py 0.01` 재실행으로 생성.
+> 전체 히트맵·체크포인트는 용량 문제로 레포 미포함. `python experiments/anomaly/run_resolution_sweep.py 0.01` 재실행으로 생성.
 > (인자 생략 시 coreset 0.1로 실행.)

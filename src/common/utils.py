@@ -4,6 +4,8 @@ import torch
 import numpy as np
 from datetime import datetime
 
+from src.common.paths import SUPERVISED_OUT_DIR
+
 def set_seed(seed=42):
     """실험 재현성을 위해 시드를 고정합니다."""
     random.seed(seed)
@@ -14,7 +16,7 @@ def set_seed(seed=42):
     torch.backends.cudnn.benchmark = False
 
 
-def make_run_dir(base_path='./outputs'):
+def make_run_dir(base_path=SUPERVISED_OUT_DIR):
     """학습을 돌릴 때마다 고유한 실험 폴더를 생성합니다."""
     now = datetime.now().strftime('%Y%m%d_%H%M%S')
     run_dir = os.path.join(base_path, f"run_{now}")
