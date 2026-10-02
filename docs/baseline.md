@@ -3,7 +3,24 @@
 "딥러닝 기반 나사 결함 탐지 모델 성능 비교에 관한 연구"(2026년 1학기 졸업논문, [PDF](thesis/딥러닝%20기반의%20나사%20결함%20탐지%20모델%20성능%20비교에%20관한%20연구.pdf)).
 이 레포 이상탐지 트랙([patchcore.md](patchcore.md))의 **출발점이자 비교 기준선**이다. 코드는 `src/supervised/`, 실행은 `experiments/supervised/`.
 
-<img src="images/baseline_pipeline.png" width="820" alt="baseline 실험 파이프라인">
+```mermaid
+flowchart LR
+    subgraph S1["1단계 · 데이터 구성"]
+        RAW["원본 480장"] --> TEST["test 55장<br/>정상 36 + 결함 19"]
+        RAW --> TRAIN["train 425장<br/>정상 325 + 결함 100"]
+    end
+    subgraph S2["2단계 · 모델 최적화와 최종 학습"]
+        GS["가중치 Grid Search<br/>Stratified 5-Fold CV"] -->|"챔피언 가중치"| RT["전체 train 재학습<br/>(증강 적용, best val F2 저장)"]
+        RT --> BEST["모델별 Best Model<br/>ResNet-18, MobileNet-V2, VGG-16"]
+    end
+    subgraph S3["3단계 · 평가와 검증"]
+        M["F2, Recall, FPS<br/>FASI 산출"] --> SEL["최종 모델 선정"] --> CAM["Grad-CAM 시각화<br/>위치평가"]
+    end
+    TRAIN --> GS
+    TRAIN --> RT
+    BEST --> M
+    TEST -.->|"평가"| BEST
+```
 
 - 졸업논문의 3단계 실험 파이프라인: 데이터 구성 → 가중치 탐색과 최종 학습 → 성능 평가와 Grad-CAM 검증
 - 입력/출력: 나사 이미지 → Good(0) / Bad(1). 불량 미검출(FN) 최소화가 핵심이라 주지표는 **F2**
@@ -20,7 +37,45 @@
 
 ImageNet pretrained 3종, 헤드만 교체 후 전체 파인튜닝.
 
-<img src="images/baseline_gridsearch.png" width="820" alt="가중치 Grid Search와 5-Fold CV">
+**가중치 탐색 (Grid Search)** — 대상 가중치 w: 1.0, 1.5, ..., 5.0 (0.5 간격 9개), 가중치마다 Stratified 5-Fold CV 수행
+
+각 fold의 클래스 구성 (fold 내 클래스 비율 3.25 : 1 유지, Val 85장):
+
+| 클래스 | Fold 1 | Fold 2 | Fold 3 | Fold 4 | Fold 5 |
+|---|---:|---:|---:|---:|---:|
+| Good | 65 | 65 | 65 | 65 | 65 |
+| Type1 | 4 | 4 | 4 | 4 | 4 |
+| Type2 | 4 | 4 | 4 | 4 | 4 |
+| Type3 | 4 | 4 | 4 | 4 | 4 |
+| Type4 | 4 | 4 | 4 | 4 | 4 |
+| Type5 | 4 | 4 | 4 | 4 | 4 |
+
+```mermaid
+flowchart LR
+    subgraph CV["Stratified 5-Fold CV"]
+        H1["Fold 1"] ~~~ H2["Fold 2"] ~~~ H3["Fold 3"] ~~~ H4["Fold 4"] ~~~ H5["Fold 5"] ~~~ HZ[" "]
+        A1["Val"] ~~~ A2["Train"] ~~~ A3["Train"] ~~~ A4["Train"] ~~~ A5["Train"] --> X1["Max F2 산출"]
+        B1["Train"] ~~~ B2["Val"] ~~~ B3["Train"] ~~~ B4["Train"] ~~~ B5["Train"] --> X2["Max F2 산출"]
+        C1["Train"] ~~~ C2["Train"] ~~~ C3["Val"] ~~~ C4["Train"] ~~~ C5["Train"] --> X3["Max F2 산출"]
+        D1["Train"] ~~~ D2["Train"] ~~~ D3["Train"] ~~~ D4["Val"] ~~~ D5["Train"] --> X4["Max F2 산출"]
+        E1["Train"] ~~~ E2["Train"] ~~~ E3["Train"] ~~~ E4["Train"] ~~~ E5["Val"] --> X5["Max F2 산출"]
+    end
+    X1 --> MEAN["5개 Fold의 Max F2 평균<br/>(Mean Max F2)"]
+    X2 --> MEAN
+    X3 --> MEAN
+    X4 --> MEAN
+    X5 --> MEAN
+    MEAN --> BEST["Mean Max F2가 가장 높은 Weight<br/>= 최적 W 선정"]
+    classDef val fill:#fbbf24,stroke:#1f2937,color:#111827
+    classDef train fill:#22a559,stroke:#1f2937,color:#ffffff
+    classDef head fill:none,stroke:none,color:#111827
+    class A1,B2,C3,D4,E5 val
+    class A2,A3,A4,A5,B1,B3,B4,B5,C1,C2,C4,C5,D1,D2,D3,D5,E1,E2,E3,E4 train
+    class H1,H2,H3,H4,H5,HZ head
+```
+
+- [결과 산출] 5개 Fold의 Max F2 평균을 계산 (Mean Max F2)
+- [최적 W 확정] Mean Max F2가 가장 높은 가중치를 최적 W로 선정
 
 - 클래스 불균형(정상 3.25 : 결함 1) 처리: `CrossEntropyLoss(weight=[1.0, bad_weight])`, `bad_weight`를 1.0~5.0(0.5 간격)으로 Grid Search
 - Stratified 5-Fold CV의 **Mean Max F2**로 챔피언 가중치를 정하고, 전체 학습 데이터로 재학습해 best val F2 체크포인트로 test 평가

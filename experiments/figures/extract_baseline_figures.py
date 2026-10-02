@@ -1,8 +1,6 @@
 """baseline(졸업논문) 그림을 README 용으로 정리 — 논문 PDF 의 그림 추출 + 위치평가 그림 축소.
 
-  docs/images/baseline_pipeline.png          논문 그림: 3단계 실험 파이프라인 (6쪽)
   docs/images/baseline_augmentation.png      논문 그림: 학습 증강 예시 (8쪽)
-  docs/images/baseline_gridsearch.png        논문 그림: 가중치 Grid Search + Stratified 5-Fold CV (10쪽)
   docs/images/baseline_loss_curves.png       논문 그림: ResNet-18 / MobileNet-V2 / VGG-16 학습·검증 손실 (13쪽, 3장 병합)
   docs/images/baseline_gradcam_resnet18.png  논문 그림: ResNet-18 예측 vs Grad-CAM (16쪽)
   docs/images/baseline_localization_gt.png   Grad-CAM vs GT 마스크 (localization_eval.py 산출물 축소; 선행: 위치평가 실행)
@@ -43,9 +41,7 @@ def save(im, name, width=None):
 
 
 doc = pymupdf.open(PDF)
-save(page_images(doc, 6)[0], "baseline_pipeline.png", 1600)
 save(page_images(doc, 8)[0], "baseline_augmentation.png")
-save(page_images(doc, 10)[0], "baseline_gridsearch.png", 1600)
 curves = page_images(doc, 13)                       # ResNet-18, MobileNet-V2, VGG-16 순
 strip = Image.new("RGB", (sum(i.width for i in curves), max(i.height for i in curves)), "white")
 x = 0
