@@ -2,7 +2,7 @@
 
 > 이 프로젝트를 진행하면서 마주친 문제, 선택의 기로, 그리고 그 근거를 정리한 문서.
 > 면접에서 "왜 이렇게 했어요?" 질문에 답하기 위한 자기 언어로 된 기록.
-> 전체 그림은 [overview.md](overview.md), 트랙별 상세는 [baseline.md](baseline.md) · [anomaly.md](anomaly.md).
+> 전체 그림은 [overview.md](overview.md), 트랙별 상세는 [baseline.md](baseline.md) · [patchcore.md](patchcore.md).
 
 ---
 

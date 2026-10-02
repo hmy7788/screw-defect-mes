@@ -6,7 +6,7 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 MVTec AD `screw` 데이터셋으로 나사 결함을 검출·국소화하고, 그 모델을 MES(제조실행시스템) 형태로 운용하는 프로젝트.
 졸업논문의 **지도학습 baseline**에서 출발해 **비지도 이상탐지(PatchCore, anomalib)** 로 고도화했고, 두 가지 MES(Python PoC / C# 산업형)로 운용한다.
-문서·주석·커밋 메시지는 모두 **한국어**로 작성한다(커밋은 `feat(scope): ...` 컨벤션). 전체 그림은 `docs/overview.md`, 결정 근거는 `docs/decisions.md`.
+문서·주석·커밋 메시지는 모두 **한국어**로 작성한다(커밋은 `feat(scope): ...` 컨벤션). 전체 그림은 `docs/overview.md`, 결정 근거는 `docs/decisions.md`, MES 운용 부분은 `docs/mes.md`(루트 README는 실험 중심).
 
 ```
 src/common      경로(paths.py = 모든 경로의 기준)·set_seed 등 공용
@@ -47,7 +47,8 @@ python experiments/anomaly/build_heatmap_grid.py           # README용 히트맵
 ### README용 그림 (`docs/images/`)
 
 ```bash
-python experiments/figures/build_charts.py           # 차트 4종 (results CSV에서; 색 규칙은 스크립트 docstring)
+python experiments/figures/build_charts.py           # 차트 5종 (results CSV에서; 색 규칙은 스크립트 docstring)
+python experiments/figures/extract_baseline_figures.py  # baseline 그림: docs/thesis PDF에서 추출 + outputs/supervised 위치평가 그림 축소
 python experiments/figures/build_dataset_samples.py  # 데이터 샘플
 python experiments/figures/build_comparison.py       # baseline vs PatchCore 비교 (mes/runtime의 .pt + outputs/supervised/best_model.pth 필요)
 ```

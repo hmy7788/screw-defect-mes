@@ -4,6 +4,7 @@
   chart_resolution_type4.png      해상도 256→320 효과 (유형별 위치, PatchCore coreset 0.1)
   chart_coreset_tradeoff.png      coreset 0.1 vs 0.01 — 정확도(AUPRO) vs 추론 지연
   chart_baseline_vs_patchcore.png baseline(Grad-CAM) vs PatchCore — 유형별 위치(Pixel AUROC)
+  chart_baseline_models.png       baseline 3개 모델(ResNet-18 / MobileNet-V2 / VGG-16) test 성능 비교
 
 색 규칙(dataviz 스킬): 엔티티 고정색 — PatchCore=blue, EfficientAD=orange, PaDiM=aqua, baseline=중립 회색.
 해상도처럼 순서가 있는 값은 blue 단일 hue 의 밝음→어두움. 텍스트는 series 색이 아니라 text 토큰 색.
@@ -202,8 +203,34 @@ def chart_baseline_vs_patchcore():
     _save(fig, "chart_baseline_vs_patchcore.png")
 
 
+# ------------------------------------------------------------------ E. baseline 3개 모델
+def chart_baseline_models():
+    d = _csv(R("supervised", "classification.csv"))
+    d = d[d["experiment"] == "model_comparison"].set_index("model")
+    order = ["ResNet-18", "MobileNet-V2", "VGG-16"]
+    panels = [("test_recall", "Recall (불량을 잡은 비율)", "{:.3f}", 1.12), ("test_f2", "F2 점수 (주지표)", "{:.3f}", 1.12),
+              ("fps", "처리 속도 (FPS)", "{:.1f}", 105)]
+    fig, axes = plt.subplots(1, 3, figsize=(11, 4.6))
+    fig.subplots_adjust(top=0.70, bottom=0.14, left=0.05, right=0.98, wspace=0.28)
+    _title(fig, "baseline 3개 모델 — ResNet-18 이 모든 지표에서 최고",
+           "지도학습 이진분류, test 55장(결함 19장), 논문 보고 값. baseline 은 회색, 챔피언(ResNet-18)은 진하게")
+    for ax, (col, ttl, fmt, ymax) in zip(axes, panels):
+        for i, m in enumerate(order):
+            v = float(d.loc[m, col])
+            ax.bar(i, v, width=0.5, color=INK2 if m == "ResNet-18" else BASELINE_GRAY, zorder=3)
+            ax.text(i, v + ymax * 0.02, fmt.format(v), ha="center", va="bottom", fontsize=10.5,
+                    fontweight="bold" if m == "ResNet-18" else "normal", color=INK)
+        ax.set_xticks(range(3))
+        ax.set_xticklabels(order, fontsize=9.5)
+        ax.set_ylim(0, ymax)
+        ax.set_title(ttl, fontsize=11, color=INK, loc="left", pad=10)
+        _clean_axes(ax)
+    _save(fig, "chart_baseline_models.png")
+
+
 if __name__ == "__main__":
     chart_model_compare()
     chart_resolution_type4()
     chart_coreset_tradeoff()
     chart_baseline_vs_patchcore()
+    chart_baseline_models()

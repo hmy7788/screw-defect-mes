@@ -93,7 +93,8 @@ python experiments/anomaly/build_patchcore_summary.py  # 정확도+속도 통합
 python experiments/anomaly/build_heatmap_grid.py       # README 용 히트맵 그리드
 
 # --- README 용 그림 (docs/images/) ---
-python experiments/figures/build_charts.py             # 차트 4종 (results CSV 에서)
+python experiments/figures/build_charts.py             # 차트 5종 (results CSV 에서)
+python experiments/figures/extract_baseline_figures.py # baseline 그림 (논문 PDF 에서 추출 + 위치평가 그림 축소)
 python experiments/figures/build_dataset_samples.py    # 데이터 샘플
 python experiments/figures/build_comparison.py         # baseline vs PatchCore 비교 (PatchCore .pt + baseline best_model.pth 필요)
 
@@ -115,9 +116,9 @@ dotnet run --project csharp/ScrewMes.App -c Release
 
 - [x] 졸업논문 baseline 편입 (`src/supervised`, `experiments/supervised`) + Grad-CAM 위치평가
 - [x] 이상탐지 파이프라인(PatchCore + 마스크 평가), 평가 레이어(AUPRO·유형별)
-- [x] 해상도/coreset 스윕, EfficientAD/PaDiM 비교, 추론 latency 벤치 → [anomaly.md](anomaly.md)
+- [x] 해상도/coreset 스윕, EfficientAD/PaDiM 비교, 추론 latency 벤치 → [patchcore.md](patchcore.md)
 - [x] 추론 서비스화(이미지 → good/bad + 이상점수 + 위치 히트맵)
-- [x] Python MES-lite: SQLite + 라인 시뮬레이터 + Streamlit 관제 → [../mes/README.md](../mes/README.md)
+- [x] Python MES-lite: SQLite + 라인 시뮬레이터 + Streamlit 관제 → [mes.md](mes.md), [../mes/README.md](../mes/README.md)
 - [x] C# 산업형 MES: WPF + ONNX 네이티브 + SQL Server/EF Core + 작업지시·Lot 추적성·Pareto → [../csharp/README.md](../csharp/README.md)
 - [ ] (선택) `mes/api/server.py` FastAPI 추론 서비스 분리 — 현재 빈 스텁
 - 제외(결정): 결함 유형(Type1~5) **자동분류** — 위치 기반 분류가 무작위 수준(≈20%). [decisions.md](decisions.md) §8
