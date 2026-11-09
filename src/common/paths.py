@@ -19,3 +19,8 @@ OUTPUTS_DIR = os.path.join(REPO_ROOT, 'outputs')
 SUPERVISED_OUT_DIR = os.path.join(OUTPUTS_DIR, 'supervised')
 
 RESULTS_DIR = os.path.join(REPO_ROOT, 'results')
+
+# 합성(Cut & Paste) 결함: 이미지는 outputs/ 아래(gitignore, 재생성 가능), 정의 CSV 는 splits/ 에서 추적
+SYNTHETIC_DIR = os.path.join(OUTPUTS_DIR, 'synthetic')
+SYNTHETIC_SPLIT_CSV = os.path.join(SPLITS_DIR, 'synthetic_split.csv')
+SYNTH_EXP_DIR = os.path.join(OUTPUTS_DIR, 'synth_exp')   # 합성 전/후 비교 실험 산출물(runs.csv, 모델)
